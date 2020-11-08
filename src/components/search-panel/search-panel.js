@@ -4,30 +4,22 @@ import "./search-panel.css"
 
 export default class SearchPanel extends Component {
     state = {
-        newTodoData: [],
-        todoData: this.props.todos,
+        term: "",
     }
-
-    onSearch = (e) => {
-        const newArray = this.state.todoData.filter((el) => {
-            if (el.label.includes(e.target.value)) {
-                return el
-            }
-        })
-        this.setState({
-            newTodoData: newArray,
-        }, () => {this.props.searchPanel(this.state.newTodoData)})
-        
+    onChange = (e) => {
+        const term = e.target.value
+        this.setState({term})
+        this.props.onSearchChange(term)
     }
 
     render() {
-        console.log(this.state)
         return (
             <input
                 type="text"
                 className="form-control search-input"
                 placeholder="type to search"
-                onChange={this.onSearch}
+                value={this.state.term}
+                onChange={this.onChange}
             />
         )
     }
