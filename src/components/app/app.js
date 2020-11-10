@@ -17,14 +17,8 @@ export default class App extends Component {
             this.createTodoItem("Make Awesome App"),
             this.createTodoItem("Have a lunch"),
         ],
-        term: ''
-    }
-
-    searchPanel = (arr) => {
-        console.log(arr)
-        this.setState(({ todoData }) => {
-            return { todoData: arr }
-        })
+        term: "",
+        value: "all",
     }
 
     createTodoItem(label) {
@@ -87,23 +81,37 @@ export default class App extends Component {
         })
     }
     onSearchChange = (term) => {
-        this.setState({term})
+        this.setState({ term })
     }
 
-    search = (items, term) => {
-        if (term.length === 0) {
+    onSearchValueChange = (value) => {
+        this.setState({ value })
+    }
+
+    search = (items, term, value) => {
+        if (term.length === 0 && value === "all") {
             return items
         }
+        if (value === "active") {
+            return items.filter((el) => {
+                return (el.done === false && el.label.toUpperCase().indexOf(term.toUpperCase()) > -1)
+            })
+        }
+        if (value === "done") {
+            return items.filter((el) => {
+                return (el.done === true && el.label.toUpperCase().indexOf(term.toUpperCase()) > -1)
+            })
+        }
+
         return items.filter((el) => {
             return el.label.toUpperCase().indexOf(term.toUpperCase()) > -1
         })
-
     }
 
     render() {
-        const { todoData, term } = this.state
+        const { todoData, term, value } = this.state
 
-        const visibleItems = this.search(todoData,term)
+        const visibleItems = this.search(todoData, term, value)
 
         const doneCount = todoData.filter((el) => el.done).length
 
@@ -112,10 +120,10 @@ export default class App extends Component {
             <div className="todo-app">
                 <AppHeader toDo={todoCount} done={doneCount} />
                 <div className="top-panel d-flex">
-                    <SearchPanel
-                        onSearchChange = {this.onSearchChange}
+                    <SearchPanel onSearchChange={this.onSearchChange} />
+                    <ItemStatusFilter
+                        onSearchValueChange={this.onSearchValueChange}
                     />
-                    <ItemStatusFilter />
                 </div>
 
                 <TodoList

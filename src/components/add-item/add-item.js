@@ -35,7 +35,7 @@ export default class AddItem extends Component {
                 />
 
                 <button
-                    type="button"
+                    type="submit"
                     className="btn btn-outline-secondary"
                 >
                     Добавить
